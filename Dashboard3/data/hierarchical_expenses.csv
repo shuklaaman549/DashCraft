@@ -1,0 +1,120 @@
+name,parent,value,level
+Operations,Total Budget,43750000.0,1
+Manufacturing,Operations,17500000.0,2
+Equipment Maintenance,Manufacturing,6296571.382025985,3
+Raw Materials,Manufacturing,3931188.0661832117,3
+Labor Costs,Manufacturing,3636095.667628202,3
+Utilities,Manufacturing,3636144.884162599,3
+Supply Chain,Operations,10937500.0,2
+Logistics,Supply Chain,4574509.221994728,3
+Inventory Management,Supply Chain,2820339.687057121,3
+Vendor Relations,Supply Chain,1112783.7735902749,3
+Warehousing,Supply Chain,2429867.317357874,3
+Quality Control,Operations,6562500.0,2
+Testing Equipment,Quality Control,4545267.743698135,3
+Inspection Staff,Quality Control,490950.84363238997,3
+Compliance Audits,Quality Control,1526281.4126694752,3
+Facilities,Operations,8750000.0,2
+Building Maintenance,Facilities,2065742.681959436,3
+Security,Facilities,4281397.440714246,3
+Office Supplies,Facilities,1365138.8164649445,3
+Cleaning Services,Facilities,1037721.0608613753,3
+Technology,Total Budget,31250000.0,1
+Infrastructure,Technology,10937500.0,2
+Cloud Services,Infrastructure,3428889.6960936883,3
+Network Equipment,Infrastructure,1900217.898090844,3
+Data Centers,Infrastructure,2490832.9985428336,3
+Licenses,Infrastructure,3117559.4072726327,3
+Software Development,Technology,9375000.0,2
+Development Tools,Software Development,1299494.0112961943,3
+Platform Licenses,Software Development,6029292.897655849,3
+DevOps,Software Development,1086431.1127220716,3
+Testing,Software Development,959781.9783258833,3
+Data & Analytics,Technology,6250000.0,2
+Analytics Platforms,Data & Analytics,1480018.3698876102,3
+Data Storage,Data & Analytics,2153010.376216947,3
+BI Tools,Data & Analytics,1452380.3129047637,3
+Data Scientists,Data & Analytics,1164590.9409906787,3
+Cybersecurity,Technology,4687500.0,2
+Security Software,Cybersecurity,765456.8471481677,3
+Monitoring Tools,Cybersecurity,667404.1421137623,3
+Security Staff,Cybersecurity,2012792.0921081894,3
+Training,Cybersecurity,1241846.9186298808,3
+Sales & Marketing,Total Budget,25000000.0,1
+Direct Sales,Sales & Marketing,8750000.0,2
+Sales Salaries,Direct Sales,1310960.9856317162,3
+Commissions,Direct Sales,1008654.9267443427,3
+Travel,Direct Sales,2786671.3796442533,3
+CRM Tools,Direct Sales,3643712.7079796866,3
+Digital Marketing,Sales & Marketing,6250000.0,2
+Ad Spend,Digital Marketing,3105587.6789288726,3
+Content Creation,Digital Marketing,782004.9647142837,3
+SEO Tools,Digital Marketing,1267630.5711941074,3
+Social Media,Digital Marketing,1094776.785162737,3
+Brand Management,Sales & Marketing,5000000.0,2
+Creative Services,Brand Management,673978.9595195731,3
+PR Agencies,Brand Management,1382874.2312451059,3
+Events,Brand Management,1922312.054336768,3
+Sponsorships,Brand Management,1020834.7548985537,3
+Customer Success,Sales & Marketing,5000000.0,2
+Support Staff,Customer Success,537229.6938644666,3
+Support Tools,Customer Success,902491.8746080023,3
+Training Programs,Customer Success,2568282.128601852,3
+Feedback Systems,Customer Success,991996.302925679,3
+Human Resources,Total Budget,12500000.0,1
+Talent Acquisition,Human Resources,3750000.0,2
+Recruiting Fees,Talent Acquisition,860776.5520787594,3
+Job Boards,Talent Acquisition,919381.2264010832,3
+Interview Expenses,Talent Acquisition,1427204.412346209,3
+Onboarding,Talent Acquisition,542637.8091739487,3
+Employee Development,Human Resources,3125000.0,2
+Training Programs,Employee Development,420323.3681310849,3
+Conferences,Employee Development,1204445.4261067798,3
+E-Learning,Employee Development,813777.3947338301,3
+Coaching,Employee Development,686453.8110283047,3
+Compensation & Benefits,Human Resources,4375000.0,2
+Salaries,Compensation & Benefits,1892260.5155837366,3
+Health Insurance,Compensation & Benefits,531577.5743662056,3
+Retirement Plans,Compensation & Benefits,742973.5372918252,3
+Bonuses,Compensation & Benefits,1208188.372758233,3
+HR Operations,Human Resources,1250000.0,2
+HRIS Systems,HR Operations,697354.4507274765,3
+Payroll Processing,HR Operations,146511.0113357447,3
+Employee Relations,HR Operations,406134.5379367788,3
+Finance & Admin,Total Budget,8750000.0,1
+Accounting,Finance & Admin,2625000.0,2
+Audit Fees,Accounting,527100.5958596155,3
+Tax Services,Accounting,806499.1363167668,3
+Financial Software,Accounting,726430.8138723772,3
+Staff Salaries,Accounting,564969.4539512408,3
+Legal & Compliance,Finance & Admin,3062500.0,2
+Legal Fees,Legal & Compliance,60208.62640766762,3
+Compliance Software,Legal & Compliance,459124.50614528556,3
+Regulatory Filings,Legal & Compliance,490892.26248589566,3
+Training,Legal & Compliance,2052274.6049611508,3
+Business Intelligence,Finance & Admin,1750000.0,2
+BI Platforms,Business Intelligence,250937.6100200035,3
+Analysts,Business Intelligence,366121.25594659307,3
+Reporting Tools,Business Intelligence,635073.8097352199,3
+Data Governance,Business Intelligence,497867.3242981834,3
+Administrative Services,Finance & Admin,1312500.0,2
+Office Management,Administrative Services,868016.6891939677,3
+Reception,Administrative Services,89198.30583438305,3
+Mail Services,Administrative Services,141563.93424586972,3
+Supplies,Administrative Services,213721.0707257796,3
+Research & Development,Total Budget,3750000.0,1
+Product Research,Research & Development,1687500.0,2
+Lab Equipment,Product Research,81602.98139552312,3
+Research Staff,Product Research,398969.58676219516,3
+Materials,Product Research,167871.4679615416,3
+Testing,Product Research,1039055.9638807402,3
+Innovation Labs,Research & Development,1125000.0,2
+Prototype Development,Innovation Labs,187261.7009425559,3
+Equipment,Innovation Labs,284256.68538406474,3
+Collaboration Tools,Innovation Labs,653481.6136733792,3
+Patents & IP,Research & Development,937500.0,2
+Patent Filings,Patents & IP,103250.8350636473,3
+Legal Fees,Patents & IP,65092.16240752623,3
+IP Management,Patents & IP,373981.10077080695,3
+Licensing,Patents & IP,395175.90175801946,3
+Total Budget,,125000000.0,0

@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Budget Distribution Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            color: #5a6c7d;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .metric {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .metric::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .metric:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric:hover::before {
+            opacity: 1;
+        }
+        
+        .metric.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .metric.highlight:hover {
+            transform: translateY(-10px) scale(1.08);
+            box-shadow: 0 30px 80px rgba(102, 126, 234, 0.4), 0 15px 50px rgba(118, 75, 162, 0.3);
+        }
+        
+        .metric.highlight .metric-value {
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            font-weight: 900;
+            -webkit-text-fill-color: white;
+            background: none;
+        }
+        
+        .metric.highlight .metric-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .metric-value {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 15px 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #5a6c7d;
+            position: relative;
+        }
+        
+        .chart-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .info:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        }
+        
+        .info p {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .info strong {
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 25px;
+                margin-bottom: 25px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .metric {
+                padding: 25px;
+            }
+            
+            .metric-value {
+                font-size: 36px;
+            }
+        }
+        
+        /* Loading Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container > * {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .header {
+            animation-delay: 0.1s;
+        }
+        
+        .metrics {
+            animation-delay: 0.2s;
+        }
+        
+        .chart-container {
+            animation-delay: 0.3s;
+        }
+        
+        .info {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Budget Distribution Dashboard</h1>
+            <p>Interactive hierarchical visualization of organizational expenses</p>
+        </div>
+        
+        <div class="metrics">
+            <div class="metric highlight">
+                <div class="metric-label">Total Budget</div>
+                <div class="metric-value">$125.0M</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Divisions</div>
+                <div class="metric-value">6</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Categories</div>
+                <div class="metric-value">23</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="budget-chart" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("budget-chart")) {                    Plotly.newPlot(                        "budget-chart",                        [{"branchvalues":"total","hovertemplate":"\u003cb\u003e%{label}\u003c\u002fb\u003e\u003cbr\u003eValue: $%{value:,.0f}\u003cbr\u003e%{percentParent} of parent\u003cextra\u003e\u003c\u002fextra\u003e","labels":["Total Budget","Operations","Technology","Sales & Marketing","Human Resources","Finance & Admin","Research & Development","Manufacturing","Supply Chain","Infrastructure","Software Development","Facilities","Direct Sales","Quality Control","Data & Analytics","Digital Marketing","Brand Management","Customer Success","Cybersecurity","Compensation & Benefits","Talent Acquisition","Employee Development","Legal & Compliance","Accounting","Business Intelligence","Product Research","Administrative Services","HR Operations","Innovation Labs","Patents & IP","Equipment Maintenance","Platform Licenses","Logistics","Testing Equipment","Security","Raw Materials","CRM Tools","Utilities","Labor Costs","Cloud Services","Licenses","Ad Spend","Inventory Management","Travel","Customer Success - Training Programs","Data Centers","Warehousing","Data Storage","Building Maintenance","Cybersecurity - Training","Security Staff","Events","Network Equipment","Salaries","Compliance Audits","Analytics Platforms","BI Tools","Interview Expenses","PR Agencies","Office Supplies","Sales Salaries","Development Tools","SEO Tools","Cybersecurity - Training","Bonuses","Conferences","Data Scientists","Vendor Relations","Social Media","DevOps","Software Development - Testing","Cleaning Services","Sponsorships","Commissions","Feedback Systems","Software Development - Testing","Job Boards","Support Tools","Office Management","Recruiting Fees","E-Learning","Tax Services","Content Creation","Security Software","Retirement Plans","Financial Software","HRIS Systems","Coaching","Creative Services","Monitoring Tools","Collaboration Tools","Reporting Tools","Staff Salaries","Onboarding","Support Staff","Health Insurance","Audit Fees","Data Governance","Inspection Staff","Regulatory Filings","Compliance Software","Customer Success - Training Programs","Employee Relations","Research Staff","Licensing","IP Management","Analysts","Equipment","BI Platforms","Supplies","Prototype Development","Materials","Payroll Processing","Mail Services","Patent Filings","Reception","Lab Equipment","Legal & Compliance - Legal Fees","Legal & Compliance - Legal Fees"],"marker":{"colors":["#3bb3ef","#6647f0","#9851f6","#e049db","#ee4376","#eba74d","#47f0d4","rgb(86,60,204)","rgb(86,60,204)","rgb(129,68,209)","rgb(129,68,209)","rgb(86,60,204)","rgb(190,62,186)","rgb(86,60,204)","rgb(129,68,209)","rgb(190,62,186)","rgb(190,62,186)","rgb(190,62,186)","rgb(129,68,209)","rgb(202,56,100)","rgb(202,56,100)","rgb(202,56,100)","rgb(199,141,65)","rgb(199,141,65)","rgb(199,141,65)","rgb(60,204,180)","rgb(199,141,65)","rgb(202,56,100)","rgb(60,204,180)","rgb(60,204,180)","rgb(124,98,242)","rgb(167,107,247)","rgb(124,98,242)","rgb(124,98,242)","rgb(124,98,242)","rgb(124,98,242)","rgb(228,100,224)","rgb(124,98,242)","rgb(124,98,242)","rgb(167,107,247)","rgb(167,107,247)","rgb(228,100,224)","rgb(124,98,242)","rgb(228,100,224)","rgb(228,100,224)","rgb(167,107,247)","rgb(124,98,242)","rgb(167,107,247)","rgb(124,98,242)","rgb(238,180,103)","rgb(167,107,247)","rgb(228,100,224)","rgb(167,107,247)","rgb(240,95,138)","rgb(124,98,242)","rgb(167,107,247)","rgb(167,107,247)","rgb(240,95,138)","rgb(228,100,224)","rgb(124,98,242)","rgb(228,100,224)","rgb(167,107,247)","rgb(228,100,224)","rgb(238,180,103)","rgb(240,95,138)","rgb(240,95,138)","rgb(167,107,247)","rgb(124,98,242)","rgb(228,100,224)","rgb(167,107,247)","rgb(98,242,218)","rgb(124,98,242)","rgb(228,100,224)","rgb(228,100,224)","rgb(228,100,224)","rgb(98,242,218)","rgb(240,95,138)","rgb(228,100,224)","rgb(238,180,103)","rgb(240,95,138)","rgb(240,95,138)","rgb(238,180,103)","rgb(228,100,224)","rgb(167,107,247)","rgb(240,95,138)","rgb(238,180,103)","rgb(240,95,138)","rgb(240,95,138)","rgb(228,100,224)","rgb(167,107,247)","rgb(98,242,218)","rgb(238,180,103)","rgb(238,180,103)","rgb(240,95,138)","rgb(228,100,224)","rgb(240,95,138)","rgb(238,180,103)","rgb(238,180,103)","rgb(124,98,242)","rgb(238,180,103)","rgb(238,180,103)","rgb(228,100,224)","rgb(240,95,138)","rgb(98,242,218)","rgb(98,242,218)","rgb(98,242,218)","rgb(238,180,103)","rgb(98,242,218)","rgb(238,180,103)","rgb(238,180,103)","rgb(98,242,218)","rgb(98,242,218)","rgb(240,95,138)","rgb(238,180,103)","rgb(98,242,218)","rgb(238,180,103)","rgb(98,242,218)","rgb(98,242,218)","rgb(98,242,218)"],"line":{"color":"white","width":0.8}},"maxdepth":4,"parents":["","Total Budget","Total Budget","Total Budget","Total Budget","Total Budget","Total Budget","Operations","Operations","Technology","Technology","Operations","Sales & Marketing","Operations","Technology","Sales & Marketing","Sales & Marketing","Sales & Marketing","Technology","Human Resources","Human Resources","Human Resources","Finance & Admin","Finance & Admin","Finance & Admin","Research & Development","Finance & Admin","Human Resources","Research & Development","Research & Development","Manufacturing","Software Development","Supply Chain","Quality Control","Facilities","Manufacturing","Direct Sales","Manufacturing","Manufacturing","Infrastructure","Infrastructure","Digital Marketing","Supply Chain","Direct Sales","Customer Success","Infrastructure","Supply Chain","Data & Analytics","Facilities","Legal & Compliance","Cybersecurity","Brand Management","Infrastructure","Compensation & Benefits","Quality Control","Data & Analytics","Data & Analytics","Talent Acquisition","Brand Management","Facilities","Direct Sales","Software Development","Digital Marketing","Cybersecurity","Compensation & Benefits","Employee Development","Data & Analytics","Supply Chain","Digital Marketing","Software Development","Product Research","Facilities","Brand Management","Direct Sales","Customer Success","Software Development","Talent Acquisition","Customer Success","Administrative Services","Talent Acquisition","Employee Development","Accounting","Digital Marketing","Cybersecurity","Compensation & Benefits","Accounting","HR Operations","Employee Development","Brand Management","Cybersecurity","Innovation Labs","Business Intelligence","Accounting","Talent Acquisition","Customer Success","Compensation & Benefits","Accounting","Business Intelligence","Quality Control","Legal & Compliance","Legal & Compliance","Employee Development","HR Operations","Product Research","Patents & IP","Patents & IP","Business Intelligence","Innovation Labs","Business Intelligence","Administrative Services","Innovation Labs","Product Research","HR Operations","Administrative Services","Patents & IP","Administrative Services","Product Research","Patents & IP","Legal & Compliance"],"pathbar":{"textfont":{"color":"white","family":"Arial","size":11},"thickness":25,"visible":true},"textfont":{"color":"white","family":"Arial","size":10},"textinfo":"label+value","texttemplate":"\u003cb\u003e%{label}\u003c\u002fb\u003e\u003cbr\u003e$%{value:,.0f}","tiling":{"orientation":"h","pad":0.3},"values":{"dtype":"f8","bdata":"AAAAAGXNnUEAAACAk9yEQQAAAABlzX1BAAAAAITXd0EAAAAAhNdnQQAAAAB2sGBBAAAAADicTEEAAAAAdrBwQQAAAICT3GRBAAAAgJPcZEEAAAAAo+FhQQAAAAB2sGBBAAAAAHawYEEAAAAAsQhZQQAAAACE11dBAAAAAITXV0EAAAAA0BJTQQAAAADQElNBAAAAAKPhUUEAAAAAdrBQQQAAAAA4nExBAAAAAITXR0EAAAAAcl1HQQAAAAD0BkRBAAAAAPCzOkEAAAAAzL85QQAAAAD0BjRBAAAAANASM0EAAAAAiCoxQQAAAAA4nCxBHh1z2P4EWEGFMXM5+\u002f9WQWApNU5Lc1FBEMCY77xWUUGGqTRcDVVQQQaxeAga\u002fk1BERSfWqDMS0F0PSxx2L1LQUfXdNW\u002fvUtBFZkZ2QwpSkF3giG0+8hHQSwk59aZsUdB3Xzx13mERUHSLpiwt0JFQYYGdhAtmENBZ0DQf+gAQ0HNLp+o1YlCQX7gJzAZbUBBw+SUrk6FP0Hmu96aslA\u002fQfxmlBd4tj5BsgPpDQhVPUEUSOnluf48QbhL\u002fYOk3zxB7LSkaQlKN0FV9LBeUpU2Qc6GGlBcKTZBaoWPaQTHNUEY4TI72hk1QbvYA9GS1DRBM1xS\u002fPAANEGyTuQCJtQzQevGOZKuVzNB71Mr6\u002fbyMkFkFW1ffG8yQXxVFW3dYDJB38Pk8C7FMUEjAwrGz\u002fowQdVsAMl4tDBBi1rbHN+TMEHBxoHtn7UvQeA4KR8yqy9BLxCCgkUnL0EIPH7aHcguQRkTGZv4RS5BUiHn9EtKLUHA1+pzqg4sQb6ezL+3iitBIAjeYGF9KkExEaoa0UQqQXaNGsqi1ShBr0\u002fLRcacKEHVB+\u002ftad0nQZZnvbEhXCdBA+oXE3usJkFW4bOgPSsmQXbAxeYUSCVBGho\u002fn+vyJEFFJkbrdZEkQZMiw0gYXiRBrGUzOlPxI0FgnZWeg2EjQQpMbOjSPSFBPQxMnluPIEEQNEJjG2UgQcpTEybzOCBB84IUMfkVIEGv0hRMLWMeQVQr4V8b9x1BRhrJDDH2HUEj80oG0gUcQela93iNpxlBIebYJtrJGEFcMNhY5lkYQUp0ZpufHhhBYXYwZ3TTFkEb3RYGpVgWQf1R1b2CWRFB6CpS4cyhDkFzrdiQyBYKQVDFh5vt2wZB6J5ivvt9BEHmMTcXeOIBQQfmVXnfRwFB9LJrXC01+UATmLLk5Mb1QMTKy7Mv7PNAuURxMoXI70DNF4gLFGbtQA=="},"type":"icicle"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"title":{"font":{"size":20,"color":"#4f8beb"},"text":"Budget Distribution Overview","x":0.5,"xanchor":"center"},"margin":{"t":60,"l":20,"r":20,"b":20},"font":{"size":10,"family":"Arial, sans-serif","color":"white"},"height":600},                        {"responsive": true}                    )                };            </script>        </div>
+        </div>
+        
+        <div class="info">
+            <p><strong>Interactive Features:</strong> Click on any section to zoom in and explore subcategories. 
+            Use the path bar at the top to navigate back to parent levels.</p>
+        </div>
+    </div>
+</body>
+</html>

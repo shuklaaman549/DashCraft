@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analytics Portfolio | Professional Dashboard Showcase</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #4f46e5;
+            --accent-color: #8b5cf6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --bg-primary: #0f172a;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --card-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.8) 100%);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --border-radius: 12px;
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --header-bg-scrolled: rgba(248, 250, 252, 0.85);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            z-index: -2;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.05) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+            z-index: -1;
+            animation: backgroundShift 15s linear infinite;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            33% { 
+                transform: translateY(-20px) rotate(1deg) scale(1.02);
+            }
+            66% { 
+                transform: translateY(10px) rotate(-1deg) scale(0.98);
+            }
+        }
+
+        @keyframes backgroundShift {
+            0% { 
+                transform: translateX(-100%) rotate(0deg);
+            }
+            100% { 
+                transform: translateX(100%) rotate(360deg);
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 8s infinite linear;
+        }
+
+        .particle:nth-child(2n) {
+            background: rgba(139, 92, 246, 0.6);
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(59, 130, 246, 0.6);
+            animation-duration: 10s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: transparent;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.5rem 0;
+        }
+
+        header.scrolled {
+            top: 0;
+            background: var(--header-bg-scrolled);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 0.05rem 0;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled nav {
+            padding: 0.1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 270px;
+            height: auto;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled .logo-icon {
+            width: 100px;
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            font-size: 1rem;
+        }
+
+        header.scrolled .nav-links a {
+            color: #374151;
+            font-size: 0.85rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled .mobile-menu {
+            color: #374151;
+            font-size: 1.2rem;
+        }
+
+        .hero {
+            min-height: 110vh;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            color: var(--text-primary);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.55;
+            animation: fadeInUp 1s ease 0.2s both;
+            font-weight: 600;
+            line-height: 1.5;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: transparent;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .skill-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .projects {
+            padding: 6rem 2rem;
+            background: transparent;
+            position: relative;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .project-card {
+            background: var(--card-gradient);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(99, 102, 241, 0.3);
+        }
+
+        .project-header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .project-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .technologies {
+            padding: 6rem 2rem;
+            background: transparent;
+            position: relative;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tech-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            background: var(--card-gradient);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
+        }
+
+        .tech-badge i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badge span {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .about {
+            padding: 6rem 2rem;
+            background: transparent;
+            position: relative;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: transparent;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-gradient);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        footer {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 3rem 2rem 2rem;
+            position: relative;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-main h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-main p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-content {
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo-icon {
+                width: 160px;
+            }
+
+            header.scrolled .logo-icon {
+                width: 80px;
+            }
+
+            nav {
+                padding: 0.5rem 1rem;
+            }
+
+            header.scrolled nav {
+                padding: 0.1rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem;
+            }
+
+            header.scrolled nav {
+                padding: 0.2rem 1rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .skills, .projects, .about {
+                padding: 4rem 1rem;
+            }
+
+            .project-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <header id="header">
+        <nav>
+            <a href="#" class="logo">
+                <img src="assets/logo.png" alt="DashCraft Logo" class="logo-icon">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#technologies">Technologies</a></li>
+                <li><a href="#projects">Dashboards</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <p>Explore a series of purpose-built dashboards that simplify data understanding through interactive visual storytelling.</p>
+            <a href="#projects" class="cta-button">
+                <i class="fas fa-chart-bar"></i> Explore Dashboards
+            </a>
+        </div>
+    </section>
+
+    <section id="technologies" class="technologies">
+        <div class="container">
+            <div class="section-title">
+                <h2>Built With</h2>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-badge">
+                    <i class="fab fa-python"></i>
+                    <span>Python</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-table"></i>
+                    <span>Pandas</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-calculator"></i>
+                    <span>NumPy</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Plotly</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Plotly Express</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Graph Objects</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fas fa-code"></i>
+                    <span>HTML/CSS</span>
+                </div>
+                <div class="tech-badge">
+                    <i class="fab fa-js-square"></i>
+                    <span>JavaScript</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-title">
+                <h2>Dashboard Collection</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>311 Service Requests Dashboard</h3>
+                        <p>Pittsburgh City Services Analytics</p>
+                    </div>
+                    <div class="project-content">
+                        <p>Interactive dashboard analyzing 6,810 simulated 311 service requests across Pittsburgh. Features status tracking, departmental performance, geographic mapping, and monthly trends with real-time filtering.</p>
+                        <div class="project-tags">
+                            <span class="tag">Pandas</span>
+                            <span class="tag">Plotly</span>
+                            <span class="tag">Geographic Mapping</span>
+                            <span class="tag">Time Series</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-primary" onclick="openDashboard('Dashboard1/outputs/dashboard.html', '311 Service Requests Dashboard')">
+                                <i class="fas fa-eye"></i> View Dashboard
+                            </button>
+                            <button class="btn btn-secondary" onclick="showProjectDetails('dashboard1')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Logistics Analytics Dashboard</h3>
+                        <p>Transportation & Revenue Intelligence</p>
+                    </div>
+                    <div class="project-content">
+                        <p>Multi-dimensional logistics analysis featuring KPI indicators, trip type breakdowns, state-wise revenue analysis, and city performance metrics with correlation scatter plots.</p>
+                        <div class="project-tags">
+                            <span class="tag">NumPy</span>
+                            <span class="tag">Plotly Indicators</span>
+                            <span class="tag">Multi-axis Charts</span>
+                            <span class="tag">Correlation Analysis</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-primary" onclick="openDashboard('Dashboard2/outputs/dashboard.html', 'Logistics Analytics Dashboard')">
+                                <i class="fas fa-eye"></i> View Dashboard
+                            </button>
+                            <button class="btn btn-secondary" onclick="showProjectDetails('dashboard2')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Hierarchical Budget Analysis</h3>
+                        <p>Interactive Expense Breakdown</p>
+                    </div>
+                    <div class="project-content">
+                        <p>Sophisticated icicle chart visualization displaying $125M organizational budget across 6 divisions, 23 subcategories, and detailed expense items with drill-down navigation.</p>
+                        <div class="project-tags">
+                            <span class="tag">Plotly Icicle</span>
+                            <span class="tag">Hierarchical Data</span>
+                            <span class="tag">Budget Analysis</span>
+                            <span class="tag">Drill-down</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-primary" onclick="openDashboard('Dashboard3/outputs/dashboard.html', 'Hierarchical Budget Analysis')">
+                                <i class="fas fa-eye"></i> View Dashboard
+                            </button>
+                            <button class="btn btn-secondary" onclick="showProjectDetails('dashboard3')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Global Revenue Sunburst</h3>
+                        <p>Multi-Level Business Intelligence</p>
+                    </div>
+                    <div class="project-content">
+                        <p>Interactive sunburst visualization analyzing global business revenue across 5 regions, 4 divisions, and 35+ product categories with growth rate analytics and KPI monitoring.</p>
+                        <div class="project-tags">
+                            <span class="tag">Sunburst</span>
+                            <span class="tag">Global Analytics</span>
+                            <span class="tag">Growth Tracking</span>
+                            <span class="tag">Business Intelligence</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-primary" onclick="openDashboard('Dashboard4/outputs/dashboard.html', 'Global Revenue Sunburst')">
+                                <i class="fas fa-eye"></i> View Dashboard
+                            </button>
+                            <button class="btn btn-secondary" onclick="showProjectDetails('dashboard4')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <h2>About This Project</h2>
+                <p><strong>DashCraft is a self-initiated portfolio project to demonstrate end-to-end capability in data analysis, visualization, and dashboard development.</strong> From structuring raw datasets to delivering intuitive front-end insights, each dashboard tackles a unique domain challenge.</p>
+                <p>The project showcases practical Python applications across diverse analytical scenarios - from municipal service optimization and transportation logistics to organizational budgeting and global business intelligence.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Interactive Dashboards</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">8+</span>
+                        <span class="stat-label">Python Libraries</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">12+</span>
+                        <span class="stat-label">Visualization Types</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Custom Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-main">
+                <h3>Made with Python. Designed for Insight.</h3>
+                <p>© 2025 Aman Shukla</p>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/shuklaaman549" target="_blank" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/shuklaaman549/" target="_blank" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://x.com/shuklaaman549" target="_blank" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com/i.amanshukla" target="_blank" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="mailto:shuklaaman549@gmail.com" title="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const header = document.getElementById('header');
+        let lastScrollY = window.scrollY;
+        let isScrolled = false;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 100 && !isScrolled) {
+                header.classList.add('scrolled');
+                isScrolled = true;
+            } else if (currentScrollY <= 100 && isScrolled) {
+                header.classList.remove('scrolled');
+                isScrolled = false;
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = header.offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        function openDashboard(url, title = 'Dashboard') {
+            window.open(url, '_blank');
+        }
+
+        function showProjectDetails(projectId) {
+            const details = {
+                dashboard1: {
+                    title: "311 Service Requests Dashboard",
+                    description: "Comprehensive analysis of Pittsburgh city service requests using simulated data. Processes 6,810 requests across 10 categories including road repair, streetlights, waste management, and noise complaints. Features geographic mapping with Pittsburgh coordinates, departmental performance tracking for 10 city departments, and status analysis (New, Open, On Hold, Closed).",
+                    technologies: ["Pandas", "Plotly", "Geographic Data", "Time Series", "Data Aggregation"],
+                    features: ["Interactive Pittsburgh map", "Monthly trend analysis", "Departmental breakdown", "Request status tracking", "Origin source analysis (Call Center, Website, Mobile App)"]
+                },
+                dashboard2: {
+                    title: "Logistics Analytics Dashboard",
+                    description: "Multi-dimensional transportation analytics featuring KPI indicators for revenue ($9.2M), total miles (1.1M), shipping costs, and delivery performance. Includes trip type analysis (Domestic, International, Intercom), state-wise performance across 6 Midwest states, and revenue-miles correlation analysis.",
+                    technologies: ["NumPy", "Plotly Indicators", "Statistical Analysis", "Multi-axis Visualization", "Revenue Analytics"],
+                    features: ["Dynamic KPI indicators", "Trip type donut charts", "State performance comparison", "Revenue vs miles scatter plot", "City-wise analytics (35+ cities)"]
+                },
+                dashboard3: {
+                    title: "Hierarchical Budget Analysis",
+                    description: "Interactive icicle chart visualization of organizational expenses totaling $125M. Breaks down budget across 6 major divisions (Operations, Technology, Sales & Marketing, HR, Finance, R&D) into 23 subcategories and detailed expense items. Features drill-down navigation and color-coded hierarchical structure.",
+                    technologies: ["Plotly Icicle Charts", "Hierarchical Data Processing", "Color Mapping", "Data Normalization", "Financial Analytics"],
+                    features: ["3-level hierarchy visualization", "Interactive drill-down", "Budget distribution analysis", "Division comparison", "Expense categorization"]
+                },
+                dashboard4: {
+                    title: "Global Revenue Sunburst",
+                    description: "Multi-level sunburst chart analyzing global business revenue across 5 regions (North America, Europe, Asia Pacific, Latin America, Middle East & Africa), 4 business divisions, and 35+ product categories. Includes growth rate tracking and KPI monitoring with dynamic color schemes.",
+                    technologies: ["Plotly Sunburst", "Global Data Analysis", "Growth Rate Calculations", "Color Gradient Mapping", "Business Intelligence"],
+                    features: ["Multi-level sunburst visualization", "Regional performance tracking", "Growth rate analysis", "Product category breakdown", "Interactive business intelligence"]
+                }
+            };
+
+            const project = details[projectId];
+            alert(`${project.title}\n\n${project.description}\n\nKey Technologies: ${project.technologies.join(', ')}\n\nMain Features:\n• ${project.features.join('\n• ')}`);
+        }
+
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-card, .project-card, .stat').forEach(el => {
+            observer.observe(el);
+        });
+
+        function showLoadingState(button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-external-link-alt fa-spin"></i> Opening...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1000);
+        }
+
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                showLoadingState(this);
+            });
+        });
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', createParticles);
+    </script>
+</body>
+</html>

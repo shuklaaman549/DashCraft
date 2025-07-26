@@ -1,0 +1,355 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Global Business Intelligence Dashboard</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+                min-height: 100vh;
+                color: #1a202c;
+                overflow-x: hidden;
+            }
+            
+            .dashboard-container {
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 20px;
+                min-height: 100vh;
+            }
+            
+            .header {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                backdrop-filter: blur(20px);
+                border-radius: 20px;
+                padding: 40px;
+                text-align: center;
+                margin-bottom: 30px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                position: relative;
+                overflow: hidden;
+                color: white;
+            }
+            
+            .header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(102,126,234,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+                opacity: 0.5;
+            }
+            
+            .header h1 {
+                font-size: 3rem;
+                font-weight: 800;
+                color: white;
+                margin-bottom: 15px;
+                position: relative;
+                z-index: 1;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            
+            .header p {
+                font-size: 1.2rem;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .kpi-section {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+                margin-bottom: 30px;
+            }
+            
+            .kpi-card {
+                backdrop-filter: blur(20px);
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                position: relative;
+                overflow: hidden;
+                color: white;
+            }
+            
+            .kpi-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+                background-size: 300% 300%;
+                animation: gradientShift 4s ease infinite;
+            }
+            
+            @keyframes gradientShift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            
+            .kpi-card:nth-child(1) {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .kpi-card:nth-child(2) {
+                background: linear-gradient(135deg, #f093fb 0%, #764ba2 100%);
+            }
+            
+            .kpi-card:nth-child(3) {
+                background: linear-gradient(135deg, #4facfe 0%, #764ba2 100%);
+            }
+            
+            .kpi-card:nth-child(4) {
+                background: linear-gradient(135deg, #43e97b 0%, #764ba2 100%);
+            }
+            
+            .kpi-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+            }
+            
+            .kpi-icon {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+                color: rgba(255, 255, 255, 0.9);
+                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            }
+            
+            .kpi-value {
+                font-size: 2.8rem;
+                font-weight: 800;
+                color: white;
+                margin-bottom: 10px;
+                line-height: 1;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            
+            .kpi-label {
+                font-size: 1rem;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .kpi-change {
+                font-size: 0.9rem;
+                margin-top: 8px;
+                padding: 8px 16px;
+                border-radius: 25px;
+                font-weight: 600;
+                box-shadow: 
+                    0 4px 15px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .kpi-change::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 50%;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+                pointer-events: none;
+            }
+            
+            .kpi-change:hover {
+                transform: translateY(-2px);
+                box-shadow: 
+                    0 6px 20px rgba(0, 0, 0, 0.25),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            }
+            
+            .positive {
+                backdrop-filter: blur(10px);
+                font-weight: 600;
+            }
+            
+            .chart-main-container {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+                backdrop-filter: blur(20px);
+                border-radius: 25px;
+                padding: 40px;
+                box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                margin-bottom: 30px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .chart-main-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
+                border-radius: 25px;
+                pointer-events: none;
+            }
+            
+            .chart-container {
+                position: relative;
+                z-index: 1;
+                min-height: 700px;
+            }
+            
+            .insights-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #2C3E50 100%);
+                backdrop-filter: blur(20px);
+                border-radius: 20px;
+                padding: 35px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white;
+            }
+            
+            .insights-title {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: white;
+                margin-bottom: 25px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+                padding-bottom: 15px;
+            }
+            
+            .insight-item {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.15));
+                border-left: 4px solid #FFD700;
+                padding: 20px 25px;
+                margin-bottom: 18px;
+                border-radius: 12px;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(15px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                transition: all 0.3s ease;
+            }
+            
+            .insight-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+                border-left-color: #FFA500;
+            }
+            
+            .insight-item strong {
+                color: #FFD700;
+                font-weight: 700;
+            }
+            
+            @media (max-width: 768px) {
+                .header h1 {
+                    font-size: 2.2rem;
+                }
+                
+                .kpi-section {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+                
+                .chart-main-container {
+                    padding: 20px;
+                }
+                
+                .dashboard-container {
+                    padding: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>Global Business Intelligence</h1>
+                <p>Multi-Level Hierarchical Data Exploration & Revenue Analytics</p>
+            </div>
+            
+            <div class="kpi-section">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="kpi-value">$1531.0M</div>
+                    <div class="kpi-label">Total Revenue</div>
+                    <div class="kpi-change positive" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.4)); color: #10b981; border: 1px solid rgba(102, 126, 234, 0.4);">+16.7% Growth</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-globe-americas"></i></div>
+                    <div class="kpi-value">5</div>
+                    <div class="kpi-label">Global Regions</div>
+                    <div class="kpi-change positive" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.3), rgba(118, 75, 162, 0.4)); color: white; border: 1px solid rgba(240, 147, 251, 0.4);">Worldwide Coverage</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-boxes"></i></div>
+                    <div class="kpi-value">36</div>
+                    <div class="kpi-label">Product Categories</div>
+                    <div class="kpi-change positive" style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.3), rgba(118, 75, 162, 0.4)); color: white; border: 1px solid rgba(79, 172, 254, 0.4);">Diversified Portfolio</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="kpi-value">52.3%</div>
+                    <div class="kpi-label">Highest Growth</div>
+                    <div class="kpi-change positive" style="background: linear-gradient(135deg, rgba(67, 233, 123, 0.3), rgba(118, 75, 162, 0.4)); color: #FD79A8; border: 1px solid rgba(67, 233, 123, 0.4);">Telehealth</div>
+                </div>
+            </div>
+            
+            <div class="chart-main-container">
+                <div class="chart-container">
+                    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="71b8f367-2925-4c94-a824-45a6f92d7c9f" class="plotly-graph-div" style="height:700px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("71b8f367-2925-4c94-a824-45a6f92d7c9f")) {                    Plotly.newPlot(                        "71b8f367-2925-4c94-a824-45a6f92d7c9f",                        [{"branchvalues":"total","customdata":["Total Global Revenue: $1,531,000,000","Asia Pacific\u003cbr\u003eRevenue: $407,000,000\u003cbr\u003eAvg Growth: 19.5%","Europe\u003cbr\u003eRevenue: $381,000,000\u003cbr\u003eAvg Growth: 12.3%","Latin America\u003cbr\u003eRevenue: $170,000,000\u003cbr\u003eAvg Growth: 21.0%","Middle East & Africa\u003cbr\u003eRevenue: $140,000,000\u003cbr\u003eAvg Growth: 24.3%","North America\u003cbr\u003eRevenue: $433,000,000\u003cbr\u003eAvg Growth: 9.3%","Financial Services\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $80,000,000\u003cbr\u003eAvg Growth: 24.8%","Healthcare\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $72,000,000\u003cbr\u003eAvg Growth: 18.9%","Manufacturing\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $128,000,000\u003cbr\u003eAvg Growth: 10.1%","Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $127,000,000\u003cbr\u003eAvg Growth: 23.3%","Financial Services\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $73,000,000\u003cbr\u003eAvg Growth: 15.1%","Healthcare\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $77,000,000\u003cbr\u003eAvg Growth: 12.8%","Manufacturing\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $113,000,000\u003cbr\u003eAvg Growth: 8.3%","Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $118,000,000\u003cbr\u003eAvg Growth: 12.7%","Financial Services\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $27,000,000\u003cbr\u003eAvg Growth: 25.5%","Healthcare\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $27,000,000\u003cbr\u003eAvg Growth: 22.7%","Manufacturing\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $66,000,000\u003cbr\u003eAvg Growth: 7.7%","Technology\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $50,000,000\u003cbr\u003eAvg Growth: 29.6%","Financial Services\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $30,000,000\u003cbr\u003eAvg Growth: 25.5%","Healthcare\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $22,000,000\u003cbr\u003eAvg Growth: 28.3%","Manufacturing\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $58,000,000\u003cbr\u003eAvg Growth: 6.6%","Technology\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $30,000,000\u003cbr\u003eAvg Growth: 36.7%","Financial Services\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $81,000,000\u003cbr\u003eAvg Growth: 8.8%","Healthcare\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $88,000,000\u003cbr\u003eAvg Growth: 12.1%","Manufacturing\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $117,000,000\u003cbr\u003eAvg Growth: 5.2%","Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $147,000,000\u003cbr\u003eAvg Growth: 10.5%","Cloud Services\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $45,000,000\u003cbr\u003eGrowth Rate: 8.5%","Software Licenses\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $32,000,000\u003cbr\u003eGrowth Rate: 12.3%","AI\u002fML Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $28,000,000\u003cbr\u003eGrowth Rate: 15.7%","Data Analytics\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $23,000,000\u003cbr\u003eGrowth Rate: 9.8%","Cybersecurity\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $19,000,000\u003cbr\u003eGrowth Rate: 6.4%","Automotive\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $38,000,000\u003cbr\u003eGrowth Rate: 4.2%","Electronics\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $31,000,000\u003cbr\u003eGrowth Rate: 7.1%","Industrial Equipment\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $26,000,000\u003cbr\u003eGrowth Rate: 3.8%","Aerospace\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $22,000,000\u003cbr\u003eGrowth Rate: 5.9%","Medical Devices\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $29,000,000\u003cbr\u003eGrowth Rate: 11.2%","Pharmaceuticals\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $25,000,000\u003cbr\u003eGrowth Rate: 8.7%","Telehealth\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $18,000,000\u003cbr\u003eGrowth Rate: 22.4%","Diagnostics\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $16,000,000\u003cbr\u003eGrowth Rate: 6.3%","Fintech\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $24,000,000\u003cbr\u003eGrowth Rate: 18.9%","Insurance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $21,000,000\u003cbr\u003eGrowth Rate: 5.1%","Investment Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $19,000,000\u003cbr\u003eGrowth Rate: 7.8%","Retail Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: North America\u003cbr\u003eRevenue: $17,000,000\u003cbr\u003eGrowth Rate: 3.2%","Cloud Services\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $35,000,000\u003cbr\u003eGrowth Rate: 12.1%","Software Licenses\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $28,000,000\u003cbr\u003eGrowth Rate: 9.4%","AI\u002fML Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $22,000,000\u003cbr\u003eGrowth Rate: 19.3%","Data Analytics\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $18,000,000\u003cbr\u003eGrowth Rate: 8.7%","Cybersecurity\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $15,000,000\u003cbr\u003eGrowth Rate: 14.2%","Automotive\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $42,000,000\u003cbr\u003eGrowth Rate: 6.8%","Electronics\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $26,000,000\u003cbr\u003eGrowth Rate: 4.5%","Industrial Equipment\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $24,000,000\u003cbr\u003eGrowth Rate: 5.3%","Renewable Energy\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $21,000,000\u003cbr\u003eGrowth Rate: 16.7%","Medical Devices\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $23,000,000\u003cbr\u003eGrowth Rate: 9.1%","Pharmaceuticals\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $28,000,000\u003cbr\u003eGrowth Rate: 7.4%","Telehealth\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $14,000,000\u003cbr\u003eGrowth Rate: 25.8%","Diagnostics\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $12,000,000\u003cbr\u003eGrowth Rate: 8.9%","Fintech\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $19,000,000\u003cbr\u003eGrowth Rate: 21.3%","Insurance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $25,000,000\u003cbr\u003eGrowth Rate: 4.7%","Investment Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $16,000,000\u003cbr\u003eGrowth Rate: 6.2%","Digital Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Europe\u003cbr\u003eRevenue: $13,000,000\u003cbr\u003eGrowth Rate: 28.1%","Cloud Services\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $29,000,000\u003cbr\u003eGrowth Rate: 24.7%","Software Licenses\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $21,000,000\u003cbr\u003eGrowth Rate: 18.6%","AI\u002fML Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $33,000,000\u003cbr\u003eGrowth Rate: 31.2%","Data Analytics\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $19,000,000\u003cbr\u003eGrowth Rate: 22.4%","Mobile Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $25,000,000\u003cbr\u003eGrowth Rate: 19.8%","Electronics\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $48,000,000\u003cbr\u003eGrowth Rate: 13.5%","Automotive\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $31,000,000\u003cbr\u003eGrowth Rate: 11.2%","Semiconductors\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $27,000,000\u003cbr\u003eGrowth Rate: 8.9%","Consumer Goods\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $22,000,000\u003cbr\u003eGrowth Rate: 6.7%","Medical Devices\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $17,000,000\u003cbr\u003eGrowth Rate: 15.3%","Digital Health\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $21,000,000\u003cbr\u003eGrowth Rate: 29.4%","Pharmaceuticals\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $19,000,000\u003cbr\u003eGrowth Rate: 12.1%","Biotechnology\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $15,000,000\u003cbr\u003eGrowth Rate: 18.7%","Digital Payments\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $32,000,000\u003cbr\u003eGrowth Rate: 35.6%","Cryptocurrency\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $18,000,000\u003cbr\u003eGrowth Rate: 42.3%","Insurance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $16,000,000\u003cbr\u003eGrowth Rate: 8.4%","Retail Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Asia Pacific\u003cbr\u003eRevenue: $14,000,000\u003cbr\u003eGrowth Rate: 12.7%","Cloud Services\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $12,000,000\u003cbr\u003eGrowth Rate: 28.4%","Software Licenses\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $8,000,000\u003cbr\u003eGrowth Rate: 15.2%","Mobile Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $14,000,000\u003cbr\u003eGrowth Rate: 33.7%","E-commerce\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $16,000,000\u003cbr\u003eGrowth Rate: 41.2%","Automotive\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $18,000,000\u003cbr\u003eGrowth Rate: 9.3%","Food Processing\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $22,000,000\u003cbr\u003eGrowth Rate: 7.1%","Textiles\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $11,000,000\u003cbr\u003eGrowth Rate: 5.8%","Mining Equipment\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $15,000,000\u003cbr\u003eGrowth Rate: 8.4%","Telehealth\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $9,000,000\u003cbr\u003eGrowth Rate: 45.6%","Medical Devices\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $7,000,000\u003cbr\u003eGrowth Rate: 12.8%","Pharmaceuticals\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $11,000,000\u003cbr\u003eGrowth Rate: 9.7%","Digital Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $13,000,000\u003cbr\u003eGrowth Rate: 38.9%","Microfinance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $8,000,000\u003cbr\u003eGrowth Rate: 22.1%","Insurance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Latin America\u003cbr\u003eRevenue: $6,000,000\u003cbr\u003eGrowth Rate: 15.4%","Cloud Services\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $8,000,000\u003cbr\u003eGrowth Rate: 32.1%","Mobile Solutions\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $12,000,000\u003cbr\u003eGrowth Rate: 29.8%","Fintech\u003cbr\u003eDivision: Technology\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $10,000,000\u003cbr\u003eGrowth Rate: 48.3%","Oil & Gas Equipment\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $25,000,000\u003cbr\u003eGrowth Rate: 6.2%","Construction\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $18,000,000\u003cbr\u003eGrowth Rate: 8.7%","Mining\u003cbr\u003eDivision: Manufacturing\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $15,000,000\u003cbr\u003eGrowth Rate: 4.9%","Telehealth\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $6,000,000\u003cbr\u003eGrowth Rate: 52.3%","Medical Infrastructure\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $9,000,000\u003cbr\u003eGrowth Rate: 18.4%","Pharmaceuticals\u003cbr\u003eDivision: Healthcare\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $7,000,000\u003cbr\u003eGrowth Rate: 14.2%","Digital Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $11,000,000\u003cbr\u003eGrowth Rate: 44.7%","Islamic Banking\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $14,000,000\u003cbr\u003eGrowth Rate: 12.3%","Insurance\u003cbr\u003eDivision: Financial Services\u003cbr\u003eRegion: Middle East & Africa\u003cbr\u003eRevenue: $5,000,000\u003cbr\u003eGrowth Rate: 19.6%"],"hovertemplate":"\u003cb\u003e%{customdata}\u003c\u002fb\u003e\u003cextra\u003e\u003c\u002fextra\u003e","ids":["Global Business","Asia Pacific","Europe","Latin America","Middle East & Africa","North America","Asia Pacific - Financial Services","Asia Pacific - Healthcare","Asia Pacific - Manufacturing","Asia Pacific - Technology","Europe - Financial Services","Europe - Healthcare","Europe - Manufacturing","Europe - Technology","Latin America - Financial Services","Latin America - Healthcare","Latin America - Manufacturing","Latin America - Technology","Middle East & Africa - Financial Services","Middle East & Africa - Healthcare","Middle East & Africa - Manufacturing","Middle East & Africa - Technology","North America - Financial Services","North America - Healthcare","North America - Manufacturing","North America - Technology","North America - Technology - Cloud Services","North America - Technology - Software Licenses","North America - Technology - AI\u002fML Solutions","North America - Technology - Data Analytics","North America - Technology - Cybersecurity","North America - Manufacturing - Automotive","North America - Manufacturing - Electronics","North America - Manufacturing - Industrial Equipment","North America - Manufacturing - Aerospace","North America - Healthcare - Medical Devices","North America - Healthcare - Pharmaceuticals","North America - Healthcare - Telehealth","North America - Healthcare - Diagnostics","North America - Financial Services - Fintech","North America - Financial Services - Insurance","North America - Financial Services - Investment Banking","North America - Financial Services - Retail Banking","Europe - Technology - Cloud Services","Europe - Technology - Software Licenses","Europe - Technology - AI\u002fML Solutions","Europe - Technology - Data Analytics","Europe - Technology - Cybersecurity","Europe - Manufacturing - Automotive","Europe - Manufacturing - Electronics","Europe - Manufacturing - Industrial Equipment","Europe - Manufacturing - Renewable Energy","Europe - Healthcare - Medical Devices","Europe - Healthcare - Pharmaceuticals","Europe - Healthcare - Telehealth","Europe - Healthcare - Diagnostics","Europe - Financial Services - Fintech","Europe - Financial Services - Insurance","Europe - Financial Services - Investment Banking","Europe - Financial Services - Digital Banking","Asia Pacific - Technology - Cloud Services","Asia Pacific - Technology - Software Licenses","Asia Pacific - Technology - AI\u002fML Solutions","Asia Pacific - Technology - Data Analytics","Asia Pacific - Technology - Mobile Solutions","Asia Pacific - Manufacturing - Electronics","Asia Pacific - Manufacturing - Automotive","Asia Pacific - Manufacturing - Semiconductors","Asia Pacific - Manufacturing - Consumer Goods","Asia Pacific - Healthcare - Medical Devices","Asia Pacific - Healthcare - Digital Health","Asia Pacific - Healthcare - Pharmaceuticals","Asia Pacific - Healthcare - Biotechnology","Asia Pacific - Financial Services - Digital Payments","Asia Pacific - Financial Services - Cryptocurrency","Asia Pacific - Financial Services - Insurance","Asia Pacific - Financial Services - Retail Banking","Latin America - Technology - Cloud Services","Latin America - Technology - Software Licenses","Latin America - Technology - Mobile Solutions","Latin America - Technology - E-commerce","Latin America - Manufacturing - Automotive","Latin America - Manufacturing - Food Processing","Latin America - Manufacturing - Textiles","Latin America - Manufacturing - Mining Equipment","Latin America - Healthcare - Telehealth","Latin America - Healthcare - Medical Devices","Latin America - Healthcare - Pharmaceuticals","Latin America - Financial Services - Digital Banking","Latin America - Financial Services - Microfinance","Latin America - Financial Services - Insurance","Middle East & Africa - Technology - Cloud Services","Middle East & Africa - Technology - Mobile Solutions","Middle East & Africa - Technology - Fintech","Middle East & Africa - Manufacturing - Oil & Gas Equipment","Middle East & Africa - Manufacturing - Construction","Middle East & Africa - Manufacturing - Mining","Middle East & Africa - Healthcare - Telehealth","Middle East & Africa - Healthcare - Medical Infrastructure","Middle East & Africa - Healthcare - Pharmaceuticals","Middle East & Africa - Financial Services - Digital Banking","Middle East & Africa - Financial Services - Islamic Banking","Middle East & Africa - Financial Services - Insurance"],"insidetextorientation":"radial","labels":["Global Business","Asia Pacific","Europe","Latin America","Middle East & Africa","North America","Financial Services","Healthcare","Manufacturing","Technology","Financial Services","Healthcare","Manufacturing","Technology","Financial Services","Healthcare","Manufacturing","Technology","Financial Services","Healthcare","Manufacturing","Technology","Financial Services","Healthcare","Manufacturing","Technology","Cloud Services","Software Licenses","AI\u002fML Solutions","Data Analytics","Cybersecurity","Automotive","Electronics","Industrial Equipment","Aerospace","Medical Devices","Pharmaceuticals","Telehealth","Diagnostics","Fintech","Insurance","Investment Banking","Retail Banking","Cloud Services","Software Licenses","AI\u002fML Solutions","Data Analytics","Cybersecurity","Automotive","Electronics","Industrial Equipment","Renewable Energy","Medical Devices","Pharmaceuticals","Telehealth","Diagnostics","Fintech","Insurance","Investment Banking","Digital Banking","Cloud Services","Software Licenses","AI\u002fML Solutions","Data Analytics","Mobile Solutions","Electronics","Automotive","Semiconductors","Consumer Goods","Medical Devices","Digital Health","Pharmaceuticals","Biotechnology","Digital Payments","Cryptocurrency","Insurance","Retail Banking","Cloud Services","Software Licenses","Mobile Solutions","E-commerce","Automotive","Food Processing","Textiles","Mining Equipment","Telehealth","Medical Devices","Pharmaceuticals","Digital Banking","Microfinance","Insurance","Cloud Services","Mobile Solutions","Fintech","Oil & Gas Equipment","Construction","Mining","Telehealth","Medical Infrastructure","Pharmaceuticals","Digital Banking","Islamic Banking","Insurance"],"marker":{"colors":["#E8E8E8","#45B7D1","#4ECDC4","#96CEB4","#FFEAA7","#FF6B6B","#FDCB6E","#00B894","#FD79A8","#6C5CE7","#FDCB6E","#00B894","#FD79A8","#6C5CE7","#FDCB6E","#00B894","#FD79A8","#6C5CE7","#FDCB6E","#00B894","#FD79A8","#6C5CE7","#FDCB6E","#00B894","#FD79A8","#6C5CE7","#E17055","#0984E3","#6C5CE7","#00B894","#E84393","#FF7675","#74B9FF","#81ECEC","#A29BFE","#55A3FF","#26DE81","#FD79A8","#FF9FF3","#5F27CD","#00D2D3","#FF9F43","#EE5A24","#E17055","#0984E3","#6C5CE7","#00B894","#E84393","#FF7675","#74B9FF","#81ECEC","#00B894","#55A3FF","#26DE81","#FD79A8","#FF9FF3","#5F27CD","#00D2D3","#FF9F43","#0ABDE3","#E17055","#0984E3","#6C5CE7","#00B894","#FDCB6E","#74B9FF","#FF7675","#FD79A8","#FDCB6E","#55A3FF","#A29BFE","#26DE81","#54A0FF","#10AC84","#EE5A24","#00D2D3","#EE5A24","#E17055","#0984E3","#FDCB6E","#FF6348","#FF7675","#7BED9F","#FF6B9D","#70A1FF","#FD79A8","#55A3FF","#26DE81","#0ABDE3","#FFC312","#00D2D3","#E17055","#FDCB6E","#5F27CD","#5352ED","#FF4757","#7292D8","#FD79A8","#3742FA","#26DE81","#0ABDE3","#C4E538","#00D2D3"],"line":{"color":"white","width":2}},"maxdepth":4,"parents":["","Global Business","Global Business","Global Business","Global Business","Global Business","Asia Pacific","Asia Pacific","Asia Pacific","Asia Pacific","Europe","Europe","Europe","Europe","Latin America","Latin America","Latin America","Latin America","Middle East & Africa","Middle East & Africa","Middle East & Africa","Middle East & Africa","North America","North America","North America","North America","North America - Technology","North America - Technology","North America - Technology","North America - Technology","North America - Technology","North America - Manufacturing","North America - Manufacturing","North America - Manufacturing","North America - Manufacturing","North America - Healthcare","North America - Healthcare","North America - Healthcare","North America - Healthcare","North America - Financial Services","North America - Financial Services","North America - Financial Services","North America - Financial Services","Europe - Technology","Europe - Technology","Europe - Technology","Europe - Technology","Europe - Technology","Europe - Manufacturing","Europe - Manufacturing","Europe - Manufacturing","Europe - Manufacturing","Europe - Healthcare","Europe - Healthcare","Europe - Healthcare","Europe - Healthcare","Europe - Financial Services","Europe - Financial Services","Europe - Financial Services","Europe - Financial Services","Asia Pacific - Technology","Asia Pacific - Technology","Asia Pacific - Technology","Asia Pacific - Technology","Asia Pacific - Technology","Asia Pacific - Manufacturing","Asia Pacific - Manufacturing","Asia Pacific - Manufacturing","Asia Pacific - Manufacturing","Asia Pacific - Healthcare","Asia Pacific - Healthcare","Asia Pacific - Healthcare","Asia Pacific - Healthcare","Asia Pacific - Financial Services","Asia Pacific - Financial Services","Asia Pacific - Financial Services","Asia Pacific - Financial Services","Latin America - Technology","Latin America - Technology","Latin America - Technology","Latin America - Technology","Latin America - Manufacturing","Latin America - Manufacturing","Latin America - Manufacturing","Latin America - Manufacturing","Latin America - Healthcare","Latin America - Healthcare","Latin America - Healthcare","Latin America - Financial Services","Latin America - Financial Services","Latin America - Financial Services","Middle East & Africa - Technology","Middle East & Africa - Technology","Middle East & Africa - Technology","Middle East & Africa - Manufacturing","Middle East & Africa - Manufacturing","Middle East & Africa - Manufacturing","Middle East & Africa - Healthcare","Middle East & Africa - Healthcare","Middle East & Africa - Healthcare","Middle East & Africa - Financial Services","Middle East & Africa - Financial Services","Middle East & Africa - Financial Services"],"rotation":90,"values":{"dtype":"i4","bdata":"wDRBW8BTQhhAmbUWgP4hCgA7WAhADs8ZALTEBACiSgQAIKEHwN2RB0DkWQRA7ZYEQD68BoCJCAfA\u002fJsBwPybAYAU7wOA8PoCgMPJAYCxTwGAAnUDgMPJAUD20wQAxj4FQEf5BsAKwwhApa4CAEjoAQA\u002fqwHA814BwOohAYDVQwLABdkBgLqMAYCxTwFAgboBQHh9AYCoEgEAJPQAADZuAUBvQAHA6iEBQGYDAcAOFgIAP6sBgLFPAYCoEgHA4eQAgN6AAoC6jAEANm4BQG9AAcDzXgEAP6sBgJ\u002fVAAAbtwDA6iEBQHh9AQAk9ABAXcYAQIG6AUBvQAFAivcBwOohAUB4fQEAbNwCwAXZAcD8mwGAsU8BQGYDAUBvQAHA6iEBwOHkAABI6AGAqBIBACT0AICf1QAAG7cAABJ6AICf1QAAJPQAgKgSAYCxTwHA2KcAwOHkAEBUiQDAz2oAwNinAEBdxgAAEnoAgI1bAAASegAAG7cAgJaYAEB4fQGAqBIBwOHkAICNWwBAVIkAwM9qAMDYpwCAn9UAQEtMAA=="},"type":"sunburst"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"family":"Inter, Arial, sans-serif","color":"white"},"text":"\u003cb style=\"font-size: 28px; color: white;\"\u003eGlobal Business Revenue Hierarchy\u003c\u002fb\u003e\u003cbr\u003e\u003cspan style=\"font-size: 16px; color: rgba(255, 255, 255, 0.8);\"\u003eInteractive Multi-Level Sunburst Analysis\u003c\u002fspan\u003e","x":0.5,"xanchor":"center"},"font":{"size":14,"family":"Inter, Arial, sans-serif"},"margin":{"t":100,"b":50,"l":50,"r":50},"height":700,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"displayModeBar": true, "responsive": true}                    )                };            </script>        </div>
+                </div>
+            </div>
+            
+            <div class="insights-section">
+                <div class="insights-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Key Insights
+                </div>
+                <div class="insight-item">
+                    <strong>Revenue Distribution:</strong> Click on any segment to drill down into sub-categories and explore the hierarchical data structure.
+                </div>
+                <div class="insight-item">
+                    <strong>Growth Leaders:</strong> Technology division shows the highest growth rates across most regions, particularly in AI/ML Solutions.
+                </div>
+                <div class="insight-item">
+                    <strong>Geographic Performance:</strong> Asia Pacific demonstrates strong growth in digital solutions, while North America leads in absolute revenue.
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
