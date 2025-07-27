@@ -213,6 +213,21 @@
             gap: 2rem;
         }
 
+        /* Dropdown menu styles for mobile */
+        .nav-links.active {
+            display: flex !important;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--bg-primary);
+            width: 130px;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
         .nav-links a {
             text-decoration: none;
             color: var(--text-primary);
@@ -678,7 +693,9 @@
             }
 
             .stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 300px;
             }
 
             .footer-content {
@@ -1080,7 +1097,7 @@
         const navLinks = document.querySelector('.nav-links');
 
         mobileMenu.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.classList.toggle('active');
         });
 
         // Intersection Observer for animations
