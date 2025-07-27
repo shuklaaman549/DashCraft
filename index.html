@@ -13,13 +13,13 @@
         }
 
         :root {
-            --primary-color: #6366f1;
-            --secondary-color: #4f46e5;
-            --accent-color: #8b5cf6;
+            --primary-color: #7b53db;
+            --secondary-color: #e790eb;
+            --accent-color: #9a31c6;
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --bg-primary: #0f172a;
-            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient: linear-gradient(135deg, #4e45ac 0%, #e790eb 100%);
             --card-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.8) 100%);
             --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             --border-radius: 12px;
@@ -36,6 +36,69 @@
             overflow-x: hidden;
         }
 
+        /* Spline 3D Background - iframe version */
+        .spline-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            opacity: 0.7;
+        }
+
+        .spline-background iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+
+        /* Custom watermark overlay to cover Spline watermark */
+        .custom-watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            z-index: -2;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .custom-watermark:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive adjustments for custom watermark */
+        @media (max-width: 768px) {
+            .custom-watermark {
+                bottom: 25px;
+                right: 15px;
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .custom-watermark {
+                bottom: 24px;
+                right: 17px;
+                font-size: 0.7rem;
+                padding: 8px 8px;
+            }
+        }
+
+        /* Enhanced overlay for better text readability */
         body::before {
             content: '';
             position: fixed;
@@ -44,9 +107,9 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+                linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.4) 50%, rgba(15, 23, 42, 0.3) 100%),
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
             z-index: -2;
             animation: backgroundFloat 20s ease-in-out infinite;
         }
@@ -59,8 +122,8 @@
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.05) 50%, transparent 70%),
-                linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+                linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.03) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.03) 50%, transparent 70%);
             z-index: -1;
             animation: backgroundShift 15s linear infinite;
         }
@@ -86,50 +149,9 @@
             }
         }
 
+        /* Remove original particles since we now have Spline animation */
         .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(99, 102, 241, 0.6);
-            border-radius: 50%;
-            animation: particleFloat 8s infinite linear;
-        }
-
-        .particle:nth-child(2n) {
-            background: rgba(139, 92, 246, 0.6);
-            animation-duration: 12s;
-        }
-
-        .particle:nth-child(3n) {
-            background: rgba(59, 130, 246, 0.6);
-            animation-duration: 10s;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
+            display: none;
         }
 
         header {
@@ -198,11 +220,13 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             font-size: 1rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         header.scrolled .nav-links a {
             color: #374151;
             font-size: 0.85rem;
+            text-shadow: none;
         }
 
         .nav-links a:hover {
@@ -230,11 +254,13 @@
             font-size: 1.5rem;
             color: var(--text-primary);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         header.scrolled .mobile-menu {
             color: #374151;
             font-size: 1.2rem;
+            text-shadow: none;
         }
 
         .hero {
@@ -259,13 +285,14 @@
         .hero p {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            opacity: 0.55;
+            opacity: 0.9;
             animation: fadeInUp 1s ease 0.2s both;
             font-weight: 600;
             line-height: 1.5;
             max-width: 1100px;
             margin-left: auto;
             margin-right: auto;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .cta-button {
@@ -279,6 +306,7 @@
             transition: all 0.3s ease;
             border: 2px solid var(--primary-color);
             animation: fadeInUp 1s ease 0.4s both;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
         }
 
         .cta-button:hover {
@@ -303,6 +331,7 @@
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: var(--text-primary);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .section-title p {
@@ -310,6 +339,7 @@
             color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         }
 
         .skill-card {
@@ -502,6 +532,7 @@
             font-size: 2.5rem;
             margin-bottom: 2rem;
             color: var(--text-primary);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .about-content p {
@@ -509,6 +540,7 @@
             color: var(--text-secondary);
             line-height: 1.8;
             margin-bottom: 1.5rem;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         }
 
         .stats {
@@ -575,11 +607,13 @@
             margin-bottom: 0.5rem;
             font-size: 1.2rem;
             font-weight: 600;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         }
 
         .footer-main p {
             margin: 0;
             opacity: 0.8;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         }
 
         .social-links {
@@ -612,7 +646,12 @@
             }
         }
 
+        /* Responsive adjustments for Spline */
         @media (max-width: 768px) {
+            .spline-background {
+                opacity: 0.5;
+            }
+
             .nav-links {
                 display: none;
             }
@@ -626,7 +665,7 @@
             }
 
             .hero p {
-                font-size: 1.1rem;
+                font-size: 1.5rem;
             }
 
             .projects-grid {
@@ -665,6 +704,10 @@
         }
 
         @media (max-width: 480px) {
+            .spline-background {
+                opacity: 0.4;
+            }
+
             nav {
                 padding: 1rem;
             }
@@ -677,6 +720,10 @@
                 padding: 1rem;
             }
 
+            .hero p {
+                font-size: 1.2rem;
+            }
+
             .skills, .projects, .about {
                 padding: 4rem 1rem;
             }
@@ -685,9 +732,36 @@
                 flex-direction: column;
             }
         }
+
+        /* Loading state for Spline */
+        .spline-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .spline-background.loaded .spline-loading {
+            display: none;
+        }
     </style>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.46/build/spline-viewer.js"></script>
 </head>
 <body>
+    <!-- Spline 3D Background - iframe version -->
+    <div class="spline-background" id="spline-bg">
+        <!-- Replace with your iframe embed code from Spline -->
+        <iframe src="https://my.spline.design/particlenebula-xQ3A9IF2VhNzBlmwVw827eyv/" frameborder="0" width="100%" height="100%"></iframe>
+    </div>
+
+    <!-- Custom watermark to cover Spline watermark -->
+    <div class="custom-watermark">
+        Built by Aman Shukla
+    </div>
+
     <div class="particles" id="particles"></div>
 
     <header id="header">
@@ -922,7 +996,9 @@
         let lastScrollY = window.scrollY;
         let isScrolled = false;
 
-        window.addEventListener('scroll', () => {
+        // Enhanced scroll handler with performance optimization
+        let ticking = false;
+        function updateHeader() {
             const currentScrollY = window.scrollY;
             
             if (currentScrollY > 100 && !isScrolled) {
@@ -934,8 +1010,17 @@
             }
             
             lastScrollY = currentScrollY;
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
         });
 
+        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -952,10 +1037,12 @@
             });
         });
 
+        // Dashboard opening function
         function openDashboard(url, title = 'Dashboard') {
             window.open(url, '_blank');
         }
 
+        // Project details modal
         function showProjectDetails(projectId) {
             const details = {
                 dashboard1: {
@@ -988,6 +1075,7 @@
             alert(`${project.title}\n\n${project.description}\n\nKey Technologies: ${project.technologies.join(', ')}\n\nMain Features:\n• ${project.features.join('\n• ')}`);
         }
 
+        // Mobile menu toggle
         const mobileMenu = document.querySelector('.mobile-menu');
         const navLinks = document.querySelector('.nav-links');
 
@@ -995,6 +1083,7 @@
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
         });
 
+        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1012,6 +1101,7 @@
             observer.observe(el);
         });
 
+        // Button loading state
         function showLoadingState(button) {
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-external-link-alt fa-spin"></i> Opening...';
@@ -1029,9 +1119,37 @@
             });
         });
 
+        // Spline 3D background handling
+        document.addEventListener('DOMContentLoaded', () => {
+            const splineViewer = document.querySelector('spline-viewer');
+            const splineBg = document.getElementById('spline-bg');
+            
+            if (splineViewer) {
+                // Handle Spline loading events
+                splineViewer.addEventListener('load', () => {
+                    splineBg.classList.add('loaded');
+                    console.log('Spline 3D background loaded successfully');
+                });
+                
+                splineViewer.addEventListener('error', (error) => {
+                    console.warn('Spline 3D background failed to load:', error);
+                    // Fallback: show original particle animation
+                    createParticles();
+                });
+
+                // Performance optimization for mobile
+                if (window.innerWidth < 768) {
+                    splineViewer.style.transform = 'scale(0.8)';
+                    splineViewer.style.filter = 'blur(1px)';
+                }
+            }
+        });
+
+        // Fallback particle system (hidden by default, shown if Spline fails)
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
+            particlesContainer.style.display = 'block';
+            const particleCount = 30; // Reduced for performance
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -1043,7 +1161,22 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', createParticles);
+        // Performance monitoring
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                // Non-critical initialization
+                console.log('Portfolio with Spline 3D background initialized');
+            });
+        }
+
+        // Reduced motion support
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.body.style.setProperty('--animation-duration', '0s');
+            const splineViewer = document.querySelector('spline-viewer');
+            if (splineViewer) {
+                splineViewer.style.opacity = '0.3';
+            }
+        }
     </script>
 </body>
 </html>
