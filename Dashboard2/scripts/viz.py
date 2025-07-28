@@ -1,13 +1,38 @@
 import pandas as pd
 import plotly.graph_objects as go
+import os
+
 
 def load_data():
-    kpi_metrics = pd.read_csv("../data/kpi_metrics.csv")
-    trip_type = pd.read_csv("../data/trip_type_data.csv")
-    state_data = pd.read_csv("../data/state_data.csv")
-    revenue_miles_scatter = pd.read_csv("../data/revenue_miles_scatter.csv")
-    city_data = pd.read_csv("../data/city_data.csv")
+    # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(script_dir, "..", "data")
+    
+    # Check if data directory exists, if not, look in current directory
+    if not os.path.exists(data_dir):
+        data_dir = os.path.join(script_dir, "data")
+        if not os.path.exists(data_dir):
+            # If still not found, use current working directory
+            data_dir = "data"
+    
+    try:
+        kpi_metrics = pd.read_csv(os.path.join(data_dir, "kpi_metrics.csv"))
+        trip_type = pd.read_csv(os.path.join(data_dir, "trip_type_data.csv"))
+        state_data = pd.read_csv(os.path.join(data_dir, "state_data.csv"))
+        revenue_miles_scatter = pd.read_csv(os.path.join(data_dir, "revenue_miles_scatter.csv"))
+        city_data = pd.read_csv(os.path.join(data_dir, "city_data.csv"))
+    except FileNotFoundError as e:
+        print(f"Error: Could not find CSV files. Please ensure the following files exist:")
+        print("- kpi_metrics.csv")
+        print("- trip_type_data.csv")
+        print("- state_data.csv")
+        print("- revenue_miles_scatter.csv")
+        print("- city_data.csv")
+        print(f"\nLooking in directory: {os.path.abspath(data_dir)}")
+        raise e
+    
     return kpi_metrics, trip_type, state_data, revenue_miles_scatter, city_data
+
 
 def create_kpi_indicators(kpi_metrics):
     indicator_figs = []
@@ -34,6 +59,7 @@ def create_kpi_indicators(kpi_metrics):
         indicator_figs.append(fig)
     
     return indicator_figs
+
 
 def create_trip_type_donut(trip_type):
     colors = ["#6B46C1", "#C084FC", "#DAAAF8"]
@@ -66,6 +92,7 @@ def create_trip_type_donut(trip_type):
     )
     return fig
 
+
 def create_state_analysis(state_data):
     fig = go.Figure()
     fig.add_trace(go.Bar(name="Revenue", x=state_data["state_code"], y=state_data["revenue"], marker_color="#6B46C1", yaxis="y", offsetgroup=1))
@@ -84,6 +111,7 @@ def create_state_analysis(state_data):
         plot_bgcolor="rgba(0,0,0,0)",
     )
     return fig
+
 
 def create_revenue_miles_scatter(revenue_miles_scatter):
     fig = go.Figure()
@@ -108,6 +136,7 @@ def create_revenue_miles_scatter(revenue_miles_scatter):
     )
     return fig
 
+
 def create_city_analysis(city_data):
     top_cities = city_data.head(20)
     fig = go.Figure()
@@ -128,7 +157,18 @@ def create_city_analysis(city_data):
     )
     return fig
 
-def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, city_data, output="../outputs/dashboard.html"):
+
+def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, city_data, output=None):
+    if output is None:
+        # Create outputs directory if it doesn't exist
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        outputs_dir = os.path.join(script_dir, "..", "outputs")
+        if not os.path.exists(outputs_dir):
+            outputs_dir = os.path.join(script_dir, "outputs")
+            if not os.path.exists(outputs_dir):
+                os.makedirs(outputs_dir)
+        output = os.path.join(outputs_dir, "dashboard.html")
+    
     kpi_indicators = create_kpi_indicators(kpi_metrics)
     trip_type_donut = create_trip_type_donut(trip_type)
     state_analysis = create_state_analysis(state_data)
@@ -140,6 +180,7 @@ def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, 
     <html>
     <head>
         <title>Logistics Analysis Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body {{
                 font-family: 'Arial', sans-serif;
@@ -163,8 +204,8 @@ def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, 
                 margin: 0;
             }}
             .dashboard-container {{
-            max-width: 1800px;
-            margin: 0 auto;
+                max-width: 1800px;
+                margin: 0 auto;
             }}
             .card {{
                 background: rgba(255, 255, 255, 0.95);
@@ -213,7 +254,120 @@ def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, 
             .col-5 {{ grid-column: 5; }}
             .col-1-2 {{ grid-column: 1/3; }}
             .col-3-5 {{ grid-column: 3/6; }}
+            
+            /* Responsive Design */
+            @media screen and (max-width: 1200px) {{
+                .dashboard-grid {{
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-rows: auto auto auto auto;
+                }}
+                .col-1 {{ grid-column: 1; }}
+                .col-2 {{ grid-column: 2; }}
+                .col-3 {{ grid-column: 3; }}
+                .col-4 {{ grid-column: 1; grid-row: 2; }}
+                .col-5 {{ grid-column: 2; grid-row: 2; }}
+                .col-1-2 {{ grid-column: 3; grid-row: 1/3; }}
+                .col-3-5 {{ grid-column: 1/4; grid-row: 3; }}
+                .row-3.col-1-2 {{ grid-column: 1/3; grid-row: 4; }}
+                .row-3.col-3-5 {{ grid-column: 3; grid-row: 4; }}
+            }}
+            
+            @media screen and (max-width: 900px) {{
+                body {{
+                    padding: 15px;
+                }}
+                .dashboard-title {{
+                    font-size: 28px;
+                }}
+                .dashboard-grid {{
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-template-rows: auto auto auto auto auto auto;
+                    gap: 12px;
+                }}
+                .col-1 {{ grid-column: 1; grid-row: 1; }}
+                .col-2 {{ grid-column: 2; grid-row: 1; }}
+                .col-3 {{ grid-column: 1; grid-row: 2; }}
+                .col-4 {{ grid-column: 2; grid-row: 2; }}
+                .col-5 {{ grid-column: 1; grid-row: 3; }}
+                .col-1-2 {{ grid-column: 2; grid-row: 3/5; }}
+                .col-3-5 {{ grid-column: 1/3; grid-row: 5; }}
+                .row-3.col-1-2 {{ grid-column: 1/3; grid-row: 6; }}
+                .row-3.col-3-5 {{ grid-column: 1/3; grid-row: 7; }}
+                .card {{
+                    padding: 15px;
+                    margin: 4px;
+                }}
+            }}
+            
+            @media screen and (max-width: 600px) {{
+                body {{
+                    padding: 10px;
+                }}
+                .dashboard-title {{
+                    font-size: 24px;
+                }}
+                .dashboard-header {{
+                    padding: 12px;
+                }}
+                .dashboard-grid {{
+                    grid-template-columns: 1fr;
+                    grid-template-rows: repeat(8, auto);
+                    gap: 10px;
+                }}
+                .col-1, .col-2, .col-3, .col-4, .col-5, 
+                .col-1-2, .col-3-5, .row-3.col-1-2, .row-3.col-3-5 {{
+                    grid-column: 1;
+                }}
+                .col-1 {{ grid-row: 1; }}
+                .col-2 {{ grid-row: 2; }}
+                .col-3 {{ grid-row: 3; }}
+                .col-4 {{ grid-row: 4; }}
+                .col-5 {{ grid-row: 5; }}
+                .col-1-2 {{ grid-row: 6; }}
+                .col-3-5 {{ grid-row: 7; }}
+                .row-3.col-1-2 {{ grid-row: 8; }}
+                .row-3.col-3-5 {{ grid-row: 9; }}
+                .card {{
+                    padding: 12px;
+                    margin: 2px;
+                }}
+                .delta-indicator {{
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }}
+            }}
+            
+            @media screen and (max-width: 400px) {{
+                body {{
+                    padding: 8px;
+                }}
+                .dashboard-title {{
+                    font-size: 20px;
+                }}
+                .dashboard-header {{
+                    padding: 10px;
+                }}
+                .card {{
+                    padding: 10px;
+                    margin: 1px;
+                }}
+            }}
+            
+            /* Make Plotly charts responsive */
+            .plotly-graph-div {{
+                width: 100% !important;
+                height: auto !important;
+            }}
         </style>
+        <script>
+            // Make Plotly charts responsive
+            window.addEventListener('resize', function() {{
+                var plots = document.querySelectorAll('.plotly-graph-div');
+                for (var i = 0; i < plots.length; i++) {{
+                    Plotly.Plots.resize(plots[i]);
+                }}
+            }});
+        </script>
     </head>
     <body>
         <div class="dashboard-container">
@@ -252,9 +406,11 @@ def create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, 
         f.write(custom_html)
     print(f"Dashboard created successfully!")
 
+
 def main():
     kpi_metrics, trip_type, state_data, revenue_miles_scatter, city_data = load_data()
     create_dashboard(kpi_metrics, trip_type, state_data, revenue_miles_scatter, city_data)
+
 
 if __name__ == "__main__":
     main()
