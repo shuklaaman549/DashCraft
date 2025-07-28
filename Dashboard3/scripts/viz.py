@@ -1,9 +1,29 @@
 import pandas as pd
 import plotly.graph_objects as go
+import os
+
 
 def load_data():
-    hierarchical = pd.read_csv("../data/hierarchical_expenses.csv")
+    # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(script_dir, "..", "data")
+    
+    # Check if data directory exists, if not, look in current directory
+    if not os.path.exists(data_dir):
+        data_dir = os.path.join(script_dir, "data")
+        if not os.path.exists(data_dir):
+            # If still not found, use current working directory
+            data_dir = "data"
+    
+    try:
+        hierarchical = pd.read_csv(os.path.join(data_dir, "hierarchical_expenses.csv"))
+    except FileNotFoundError as e:
+        print(f"Error: Could not find hierarchical_expenses.csv")
+        print(f"Looking in directory: {os.path.abspath(data_dir)}")
+        raise e
+    
     return hierarchical
+
 
 def fix_duplicate_names(df):
     df_fixed = df.copy()
@@ -22,6 +42,7 @@ def fix_duplicate_names(df):
                 break
     
     return df_fixed
+
 
 def fix_hierarchical_values(df):
     df_fixed = df.copy()
@@ -45,6 +66,7 @@ def fix_hierarchical_values(df):
     
     return df_fixed
 
+
 def find_root_division(df, node_name, color_families):
     current = node_name
     visited = set()
@@ -63,6 +85,7 @@ def find_root_division(df, node_name, color_families):
         current = parent
     
     return None
+
 
 def adjust_color_brightness(hex_color, factor):
     if not hex_color.startswith('#'):
@@ -86,6 +109,7 @@ def adjust_color_brightness(hex_color, factor):
     b = max(0, min(255, b))
     
     return f"rgb({r},{g},{b})"
+
 
 def create_rectangular_budget_breakdown(hierarchical_df):
     df = hierarchical_df.copy()
@@ -185,7 +209,18 @@ def create_rectangular_budget_breakdown(hierarchical_df):
     
     return fig
 
-def create_dashboard(hierarchical, output="../outputs/dashboard.html"):
+
+def create_dashboard(hierarchical, output=None):
+    if output is None:
+        # Create outputs directory if it doesn't exist
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        outputs_dir = os.path.join(script_dir, "..", "outputs")
+        if not os.path.exists(outputs_dir):
+            outputs_dir = os.path.join(script_dir, "outputs")
+            if not os.path.exists(outputs_dir):
+                os.makedirs(outputs_dir)
+        output = os.path.join(outputs_dir, "dashboard.html")
+    
     budget_fig = create_rectangular_budget_breakdown(hierarchical)
     
     total_budget = hierarchical[hierarchical['name'] == 'Total Budget']['value'].values[0]
@@ -203,6 +238,7 @@ def create_dashboard(hierarchical, output="../outputs/dashboard.html"):
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budget Distribution Dashboard</title>
     <style>
         * {{
@@ -431,37 +467,10 @@ def create_dashboard(hierarchical, output="../outputs/dashboard.html"):
             font-weight: 700;
         }}
         
-        /* Responsive Design */
-        @media (max-width: 768px) {{
-            body {{
-                padding: 15px;
-            }}
-            
-            .header {{
-                padding: 25px;
-                margin-bottom: 25px;
-            }}
-            
-            .header h1 {{
-                font-size: 32px;
-            }}
-            
-            .header p {{
-                font-size: 16px;
-            }}
-            
-            .metrics {{
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }}
-            
-            .metric {{
-                padding: 25px;
-            }}
-            
-            .metric-value {{
-                font-size: 36px;
-            }}
+        /* Make Plotly charts responsive */
+        .plotly-graph-div {{
+            width: 100% !important;
+            height: auto !important;
         }}
         
         /* Loading Animation */
@@ -495,7 +504,264 @@ def create_dashboard(hierarchical, output="../outputs/dashboard.html"):
         .info {{
             animation-delay: 0.4s;
         }}
+        
+        /* Responsive Design */
+        @media screen and (max-width: 1200px) {{
+            .container {{
+                max-width: 95%;
+            }}
+            
+            .metrics {{
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }}
+            
+            .header h1 {{
+                font-size: 36px;
+            }}
+            
+            .header p {{
+                font-size: 18px;
+            }}
+        }}
+        
+        @media screen and (max-width: 900px) {{
+            body {{
+                padding: 15px;
+            }}
+            
+            .header {{
+                padding: 30px 25px;
+                margin-bottom: 30px;
+            }}
+            
+            .header h1 {{
+                font-size: 32px;
+            }}
+            
+            .header p {{
+                font-size: 16px;
+            }}
+            
+            .metrics {{
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 18px;
+                margin-bottom: 30px;
+            }}
+            
+            .metric {{
+                padding: 25px 20px;
+            }}
+            
+            .metric-value {{
+                font-size: 40px;
+            }}
+            
+            .metric-label {{
+                font-size: 12px;
+                letter-spacing: 1px;
+            }}
+            
+            .chart-container {{
+                padding: 20px;
+                margin-bottom: 25px;
+            }}
+            
+            .info {{
+                padding: 20px;
+                margin-top: 25px;
+            }}
+            
+            .info p {{
+                font-size: 14px;
+            }}
+        }}
+        
+        @media screen and (max-width: 768px) {{
+            body {{
+                padding: 12px;
+            }}
+            
+            .header {{
+                padding: 25px 20px;
+                margin-bottom: 25px;
+            }}
+            
+            .header h1 {{
+                font-size: 28px;
+            }}
+            
+            .header p {{
+                font-size: 15px;
+            }}
+            
+            .metrics {{
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }}
+            
+            .metric {{
+                padding: 20px 15px;
+            }}
+            
+            .metric-value {{
+                font-size: 32px;
+            }}
+            
+            .chart-container {{
+                padding: 15px;
+                border-radius: 20px;
+            }}
+            
+            /* Adjust chart height for mobile */
+            #budget-chart {{
+                height: 400px !important;
+            }}
+        }}
+        
+        @media screen and (max-width: 600px) {{
+            body {{
+                padding: 10px;
+            }}
+            
+            .header {{
+                padding: 20px 15px;
+                margin-bottom: 20px;
+                border-radius: 20px;
+            }}
+            
+            .header h1 {{
+                font-size: 24px;
+                margin-bottom: 10px;
+            }}
+            
+            .header p {{
+                font-size: 14px;
+            }}
+            
+            .metrics {{
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+            }}
+            
+            .metric {{
+                padding: 18px 12px;
+                border-radius: 15px;
+            }}
+            
+            .metric-value {{
+                font-size: 28px;
+                margin: 10px 0;
+            }}
+            
+            .metric-label {{
+                font-size: 11px;
+            }}
+            
+            .chart-container {{
+                padding: 12px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+            }}
+            
+            .info {{
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 15px;
+            }}
+            
+            .info p {{
+                font-size: 13px;
+                line-height: 1.5;
+            }}
+            
+            /* Further reduce chart height for small screens */
+            #budget-chart {{
+                height: 350px !important;
+            }}
+        }}
+        
+        @media screen and (max-width: 480px) {{
+            body {{
+                padding: 8px;
+            }}
+            
+            .header {{
+                padding: 15px 12px;
+            }}
+            
+            .header h1 {{
+                font-size: 22px;
+            }}
+            
+            .header p {{
+                font-size: 13px;
+            }}
+            
+            .metric {{
+                padding: 15px 10px;
+            }}
+            
+            .metric-value {{
+                font-size: 24px;
+            }}
+            
+            .metric-label {{
+                font-size: 10px;
+            }}
+            
+            .chart-container {{
+                padding: 10px;
+            }}
+            
+            .info {{
+                padding: 12px;
+            }}
+            
+            .info p {{
+                font-size: 12px;
+            }}
+            
+            /* Minimum chart height for very small screens */
+            #budget-chart {{
+                height: 300px !important;
+            }}
+        }}
+        
+        @media screen and (max-width: 400px) {{
+            .header h1 {{
+                font-size: 20px;
+            }}
+            
+            .metric-value {{
+                font-size: 22px;
+            }}
+            
+            #budget-chart {{
+                height: 280px !important;
+            }}
+        }}
     </style>
+    <script>
+        // Make Plotly charts responsive
+        window.addEventListener('resize', function() {{
+            var plots = document.querySelectorAll('.plotly-graph-div');
+            for (var i = 0; i < plots.length; i++) {{
+                Plotly.Plots.resize(plots[i]);
+            }}
+        }});
+        
+        // Adjust chart responsiveness on load
+        window.addEventListener('load', function() {{
+            setTimeout(function() {{
+                var plots = document.querySelectorAll('.plotly-graph-div');
+                for (var i = 0; i < plots.length; i++) {{
+                    Plotly.Plots.resize(plots[i]);
+                }}
+            }}, 100);
+        }});
+    </script>
 </head>
 <body>
     <div class="container">
@@ -534,8 +800,13 @@ def create_dashboard(hierarchical, output="../outputs/dashboard.html"):
     
     with open(output, "w", encoding="utf-8") as f:
         f.write(html_content)
+    print(f"Dashboard created successfully!")
 
-if __name__ == "__main__":
+
+def main():
     hierarchical = load_data()
     create_dashboard(hierarchical)
-    print("Dashboard created successfully!")
+
+
+if __name__ == "__main__":
+    main()
